@@ -36,7 +36,6 @@ namespace YandexDiskSDK
 
             if (personData != null)
             {
-                Debug.Log("Hello");
                 IsAuthorized = true;
                 return personData;
             }
@@ -60,7 +59,8 @@ namespace YandexDiskSDK
 
             if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
-                Debug.LogError("Не удалось авторизоваться");
+                Debug.LogError("Authorization failed");
+                Debug.LogError(response.Content);
                 return null;
             }
 
@@ -83,7 +83,7 @@ namespace YandexDiskSDK
 
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                Debug.LogError("Не удалось взять информацию о диске. Проверьте авторизацию");
+                Debug.LogError("Failed to retrieve disk information. Check Authorization");
                 return null;
             }
 
@@ -107,7 +107,7 @@ namespace YandexDiskSDK
 
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                Debug.LogError("Не удалось получить информацию с папки. Проверьте авторизацию");
+                Debug.LogError("Failed to retrieve information from the folder. Check Authorization");
                 return null;
             }
 
@@ -136,7 +136,7 @@ namespace YandexDiskSDK
 
             if (response.StatusCode == HttpStatusCode.Conflict)
             {
-                Debug.LogError("Файл по заданному пути уже существует");
+                Debug.LogError("The file at the given path already exists");
                 return ResponseStatus.FileExists;
             }
 
@@ -150,7 +150,7 @@ namespace YandexDiskSDK
         {
             if (!File.Exists(sourcePath))
             {
-                Debug.LogError($"Файл {sourcePath} не найден");
+                Debug.LogError($"File {sourcePath} not found");
                 return new LoadFileInfo(sourcePath, targetPath, ResponseStatus.FileNotExists);
             }
 
@@ -163,19 +163,19 @@ namespace YandexDiskSDK
             {
                 if (urlResponse.Status == ResponseStatus.FileExists)
                 {
-                    Debug.LogError($"Файл {targetPath + "/" + fileName} уже существует");
+                    Debug.LogError($"File {targetPath + "/" + fileName} already exists");
                     return new LoadFileInfo(sourcePath, targetPath, urlResponse.Status);
                 }
 
                 if (urlResponse.Status == ResponseStatus.Unauthorized)
                 {
-                    Debug.LogError("Вы не авторизованы");
+                    Debug.LogError("Authorization failed");
                     return new LoadFileInfo(sourcePath, targetPath, ResponseStatus.Unauthorized);
                 }
 
                 if (urlResponse.Status == ResponseStatus.Failed)
                 {
-                    Debug.LogError("Не удалось получить ссылку на загрузку файла");
+                    Debug.LogError("Failed to get file upload link");
                     return new LoadFileInfo(sourcePath, targetPath, urlResponse.Status);
                 }
             }
@@ -222,7 +222,7 @@ namespace YandexDiskSDK
             if (!overwrite)
                 if (File.Exists(targetPath + "/" + fileInfo.Name))
                 {
-                    Debug.LogError($"Файл уже находится по заданному пути: {targetPath}/{fileInfo.Name}");
+                    Debug.LogError($"The file is already in the given path: {targetPath}/{fileInfo.Name}");
                     return new LoadFileInfo(fileInfo.Path, targetPath + "/" + fileInfo.Name, ResponseStatus.FileExists);
                 }
 
@@ -242,19 +242,19 @@ namespace YandexDiskSDK
             {
                 if (urlResponse.Status == ResponseStatus.FileNotExists)
                 {
-                    Debug.LogError($"Файл не был найден: {sourcePath}");
+                    Debug.LogError($"File not found: {sourcePath}");
                     return new LoadFileInfo(sourcePath, targetPath, urlResponse.Status);
                 }
 
                 if (urlResponse.Status == ResponseStatus.Unauthorized)
                 {
-                    Debug.Log("Вы не авторизованы");
+                    Debug.Log("Authorization failed");
                     return new LoadFileInfo(sourcePath, targetPath, urlResponse.Status);
                 }
 
                 if (urlResponse.Status == ResponseStatus.Failed)
                 {
-                    Debug.LogError($"Не удалось взять ссылку на скачивание файла {sourcePath}");
+                    Debug.LogError($"Failed to get download link {sourcePath}");
                     return new LoadFileInfo(sourcePath, targetPath, urlResponse.Status);
                 }
             }
@@ -265,7 +265,7 @@ namespace YandexDiskSDK
             if (!overwrite)
                 if (File.Exists(targetPath + "/" + fileName))
                 {
-                    Debug.LogError($"Файл уже находится по заданному пути: {targetPath}/{fileName}");
+                    Debug.LogError($"The file at the given path already exists: {targetPath}/{fileName}");
                     return new LoadFileInfo(sourcePath, targetPath, ResponseStatus.FileExists);
                 }
 
