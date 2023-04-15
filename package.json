@@ -1,0 +1,28 @@
+{
+	"name": "com.manevras.yandex-disk-sdk",
+	"version": "1.0.0",
+	"displayName": "Yandex Disk SDK",
+	"description": "Interaction with Yandex.Disk",
+	"unity": "2021.3",
+	"dependencies": {
+	"com.unity.nuget.newtonsoft-json": "3.0.0"
+	},
+	"keywords": [
+		"yandex",
+		"cloud storage",
+		"yandex disk",
+		"manevra"
+	],
+	"samples": [
+	    {
+	        "displayName": "Main Sample",
+	        "description": "All main functions to work with Yandex.Disk",
+	        "path": "Samples~/MainSample"
+	    }
+	],
+	"author": {
+		"name": "Andrey Rufov",
+		"email": "rufik956@gmail.com",
+		"url": "https://github.com/Roofikk"
+	}
+}
