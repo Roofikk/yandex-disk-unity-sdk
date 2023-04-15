@@ -57,9 +57,21 @@ namespace YandexDiskSDK
 
             HttpResponseMessage response = await client.SendAsync(request);
 
-            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            if (response.StatusCode != HttpStatusCode.OK)
             {
-                Debug.LogError("Authorization failed");
+                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    Debug.LogError("Authorization failed");
+                    return null;
+                }
+
+                if (response.StatusCode == HttpStatusCode.BadRequest)
+                {
+                    Debug.LogError("Bad request");
+                    return null;
+                }
+
+                Debug.LogError("Failed to get person info.");
                 return null;
             }
 
