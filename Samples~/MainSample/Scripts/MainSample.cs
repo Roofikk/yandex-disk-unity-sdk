@@ -99,9 +99,4 @@ public class MainSample : MonoBehaviour
             _resultText.text += $"Used space: {diskInfo.UsedSpace} bytes\n";
         });
     }
-
-    private void GetFolderInfo()
-    {
-
-    }
 }
