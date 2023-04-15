@@ -128,7 +128,7 @@ namespace YandexDiskSDK
             return folderInfo;
         }
 
-        public async Task<FileInfo[]> GetFilesInFolder(string folderPath)
+        public async Task<FileInfo[]> GetFilesOfFolder(string folderPath)
         {
             FolderInfo folderInfo = await GetContentOfFolder(folderPath);
             return folderInfo.Files.ToArray();
