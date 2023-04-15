@@ -19,11 +19,11 @@ namespace YandexDiskSDK
         private readonly string _domenYandexDisk = "https://cloud-api.yandex.net/v1/disk/";
         private string _token;
 
-        public async void OpenAuthorizePage()
+        public async void OpenAuthorizePage(string redirectUri = "https://oauth.yandex.ru/verification_code")
         {
             HttpClient client = new();
 
-            HttpRequestMessage request = new(HttpMethod.Get, $"https://oauth.yandex.ru/authorize?response_type=token&client_id={_clientId}&redirect_uri=https://oauth.yandex.ru/verification_code");
+            HttpRequestMessage request = new(HttpMethod.Get, $"https://oauth.yandex.ru/authorize?response_type=token&client_id={_clientId}&redirect_uri={redirectUri}");
             HttpResponseMessage response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             Application.OpenURL(response.RequestMessage.RequestUri.ToString());
