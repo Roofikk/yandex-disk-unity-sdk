@@ -6,23 +6,50 @@ namespace YandexDiskSDK
     public class FolderInfo
     {
         Embedded embedded { get; set; }
-
+        public string Name { get; private set; }
+        public string Path { get; private set; }
+        public List<FolderInfo> Folders => embedded.Folders;
         public List<FileInfo> Files => embedded.Files;
 
         [JsonConstructor]
-        internal FolderInfo(Embedded _embedded)
+        internal FolderInfo(Embedded _embedded, string name, string path)
         {
             embedded = _embedded;
+            Name = name;
+            Path = path;
+        }
+        
+        public FolderInfo(Item item)
+        {
+            Name = item.Name;
+            Path = item.Path;
         }
 
         internal class Embedded
         {
-            public List<FileInfo> Files { get; set; }
+            public List<Item> Items { get; private set; }
+            public List<FileInfo> Files { get; private set; }
+            public List<FolderInfo> Folders { get; private set; }
 
             [JsonConstructor]
-            public Embedded(List<FileInfo> items)
+            public Embedded(List<Item> items)
             {
-                Files = items;
+                Items = items;
+                Files = new();
+                Folders = new();
+
+                foreach(var item in items)
+                {
+                    if (item.Type == "dir")
+                    {
+                        Folders.Add(new FolderInfo(item));
+                    }
+
+                    if (item.Type == "file")
+                    {
+                        Files.Add(new FileInfo(item));
+                    }
+                }
             }
         }
     }

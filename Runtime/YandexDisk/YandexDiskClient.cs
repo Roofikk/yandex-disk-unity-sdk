@@ -19,7 +19,7 @@ namespace YandexDiskSDK
         private readonly string _domenYandexDisk = "https://cloud-api.yandex.net/v1/disk/";
         private string _token;
 
-        public async void OpenAuthorizePage(string redirectUri = "https://oauth.yandex.ru/verification_code")
+        public async void OpenAuthorizationPage(string redirectUri = "https://oauth.yandex.ru/verification_code")
         {
             HttpClient client = new();
 
@@ -109,7 +109,7 @@ namespace YandexDiskSDK
         {
             HttpClient client = new();
             string pathUrlEncoding = HttpUtility.UrlEncode(folderPath);
-            string url = _domenYandexDisk + $"resources?path={pathUrlEncoding}&fields=_embedded.items.name,_embedded.items.type,_embedded.items.path,_embedded.items.file&limit=1000";
+            string url = _domenYandexDisk + $"resources?path={pathUrlEncoding}&fields=_embedded.items.name,_embedded.items.type,_embedded.items.path,_embedded.items.file,_embedded.items.size,name,path,type&limit=1000";
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, url);
 
             request.Headers.Add("Authorization", $"OAuth {_token}");
@@ -118,6 +118,12 @@ namespace YandexDiskSDK
 
             if (response.StatusCode != HttpStatusCode.OK)
             {
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    Debug.Log("Folder not found");
+                    return null;
+                }
+
                 Debug.LogError("Failed to retrieve information from the folder. Check Authorization");
                 return null;
             }
