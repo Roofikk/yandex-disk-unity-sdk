@@ -1,7 +1,7 @@
 
-# Yandex Disk SDK
+# Yandex Disk Plugin for Unity
 
-Yandex Disk SDK is an open source plugin whose goal is to provide the developer with a simple interaction with the Yandex.Disk API to integrate it into the game in Unity. However, not all API requests have been implemented yet, but they are still at the development stage.
+Yandex Disk plugin is an open source plugin whose goal is to provide the developer with a simple interaction with the Yandex.Disk API to integrate it into the game in Unity. However, not all API requests have been implemented yet, but they are still at the development stage.
 
 ## Overview
 
@@ -21,7 +21,7 @@ Requirements:
 
 This plugin has been tested only on Windows build. I can't be sure that it will work on Android, MAC, iOS, etc. It definitely won't work on WebGL. In the future, all this will be corrected and supplemented. I will add it to WebGL soon.
 
-## Install Yandex Disk SDK
+## Install Yandex Disk Plugin
 
 Open **Package Manager** (Window --> Package Manager) and choose **Add package from git URL...** Paste this git repository and this is the finish.
 
