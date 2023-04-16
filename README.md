@@ -35,3 +35,51 @@ Create empty game object in scene and add component [YandexDiskClient](https://g
 
 ![Screenshot of component](Screenshots~/Unity_QZDvLnxFPp.png)
 
+## Authorization
+
+For beginning need open authorization page in browser.
+
+```csharp
+
+    using YandexDiskSDK;
+    using UnityEngine;
+    
+    [SerializeField] private YandexDiskClient _diskClient;
+    
+    private void Start()
+    {
+        string redirectUri = "https://oauth.yandex.ru/verification_code";
+        _diskClient.OpenAuthorizationPage(redirectUri);
+    }
+
+```
+
+To use functions of Yandex Disk need authorization with token.
+
+```csharp
+
+    using YandexDiskSDK;
+    using UnityEngine;
+    
+    [SerializeField] private YandexDiskClient _diskClient;
+    
+    private void Start()
+    {
+        string token = "Your token after open authorization page";
+        _diskClient.Authorize(token).RunAsyncOnMainThread((person) => {
+            if (person == null)
+            {
+                //Authorization failed
+                return;
+            }
+            
+            Debug.Log($"Authorization success. Welcome, {person.FirstName} {person.LastName}");
+        });
+    }
+    
+```
+
+You can also use `RunAsync(() => {})`, but Unity may work incorrectly. Some elements and game functions run on the main thread. Therefore, async methods will not always work well, use `RunAsyncOnMainThread(() => {})` for this.
+
+## Get person and disk information
+
