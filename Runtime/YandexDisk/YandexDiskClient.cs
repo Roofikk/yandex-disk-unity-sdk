@@ -137,7 +137,8 @@ namespace YandexDiskSDK
                 foreach (var folder in folderInfo.Folders)
                 {
                     FolderInfo newFolder = await GetContentOfFolder(folder.Path, true);
-                    folder.Folders.Add(newFolder);
+                    folder.Folders.AddRange(newFolder.Folders);
+                    folder.Files.AddRange(newFolder.Files);
                 }
             }
 
