@@ -83,7 +83,7 @@ namespace YandexDiskSDK
             return personData;
         }
 
-        public async Task<DiskInfo> GetInfoDisk()
+        public async Task<DiskInfo> GetDiskInfo()
         {
             HttpClient client = new();
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, _domenYandexDisk);
@@ -105,7 +105,7 @@ namespace YandexDiskSDK
             return diskInfo;
         }
 
-        public async Task<FolderInfo> GetContentOfFolder(string folderPath)
+        public async Task<FolderInfo> GetContentOfFolder(string folderPath, bool recursive = false)
         {
             HttpClient client = new();
             string pathUrlEncoding = HttpUtility.UrlEncode(folderPath);
@@ -131,6 +131,16 @@ namespace YandexDiskSDK
             response.EnsureSuccessStatusCode();
             string responseBody = await response.Content.ReadAsStringAsync();
             FolderInfo folderInfo = JsonConvert.DeserializeObject<FolderInfo>(responseBody);
+
+            if (recursive)
+            {
+                foreach (var folder in folderInfo.Folders)
+                {
+                    FolderInfo newFolder = await GetContentOfFolder(folder.Path, true);
+                    folder.Folders.Add(newFolder);
+                }
+            }
+
             return folderInfo;
         }
 
@@ -160,6 +170,27 @@ namespace YandexDiskSDK
             response.EnsureSuccessStatusCode();
             string responseBody = await response.Content.ReadAsStringAsync();
 
+            return ResponseStatus.Success;
+        }
+
+        public async Task<ResponseStatus> DeleteItem(string itemPath)
+        {
+            HttpClient client = new();
+            string pathUrlEncoding = HttpUtility.UrlEncode(itemPath);
+            string url = _domenYandexDisk + $"resources?path={pathUrlEncoding}";
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Delete, url);
+
+            request.Headers.Add("Authorization", $"OAuth {_token}");
+
+            HttpResponseMessage response = await client.SendAsync(request);
+
+            if (response.StatusCode != HttpStatusCode.NoContent && response.StatusCode != HttpStatusCode.Accepted)
+            {
+                Debug.LogError($"Failed delete item: {itemPath}. Check path");
+                return ResponseStatus.Failed;
+            }
+
+            response.EnsureSuccessStatusCode();
             return ResponseStatus.Success;
         }
 

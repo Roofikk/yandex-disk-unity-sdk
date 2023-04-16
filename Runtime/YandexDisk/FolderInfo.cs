@@ -23,6 +23,8 @@ namespace YandexDiskSDK
         {
             Name = item.Name;
             Path = item.Path;
+
+            embedded = new();
         }
 
         internal class Embedded
@@ -50,6 +52,13 @@ namespace YandexDiskSDK
                         Files.Add(new FileInfo(item));
                     }
                 }
+            }
+
+            public Embedded()
+            {
+                Items = new();
+                Files = new();
+                Folders = new();
             }
         }
     }
