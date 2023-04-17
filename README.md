@@ -29,7 +29,7 @@ Open **Package Manager** (Window --> Package Manager) and choose **Add package f
 
 To use the plugin, you must first [create and configure application](https://yandex.ru/dev/oauth/) in the [Yandex OAuth](https://oauth.yandex.ru/client/new/id/). After creating yandex application, you see Client ID in your application.
 
-![Client ID in Yandex application](Screenshots~/chrome_fExswEoUlX.png)
+<img src="Screenshots~/chrome_fExswEoUlX.png" width=50% height=50%>
 
 Create empty game object in scene and add component [YandexDiskClient](https://github.com/Roofikk/yandex-disk-sdk/blob/master/Runtime/YandexDisk/YandexDiskClient.cs). Paste Client ID from yandex application in component's field.
 
@@ -81,5 +81,47 @@ To use functions of Yandex Disk need authorization with token.
 
 You can also use `RunAsync(() => {})`, but Unity may work incorrectly. Some elements and game functions run on the main thread. Therefore, async methods will not always work well, use `RunAsyncOnMainThread(() => {})` for this.
 
-## Get person and disk information
+## Upload and download files
 
+### Upload file to Yandex disk
+
+```csharp
+
+    string sourcesPathFile = @"D:\test\text.txt";
+    string targetFolder = "disk:/test";
+
+    _diskClient.UploadFile(sourcesPathFile, targetFolder, true).RunAsyncOnMainThread((fileInfo) =>
+    {
+        if (fileInfo.Status == ResponseStatus.Success)
+        {
+            Debug.Log("File has been uploaded success");
+            Debug.Log($"File uploaded from {fileInfo.SourcePath} to {fileInfo.TargetPath}");
+        }
+    });
+
+```
+<img src="Screenshots~/explorer_Hfe02uvgjA.gif" width=70% height=70%>
+    
+Also you may use ` YandexDiskClient.UploadFiles(string[] source, string target, overwrite = true) ` to upload some files.
+
+### Download file from Yandex disk
+
+```csharp
+
+    string sourcesPathFile = "disk:/test/test.txt";
+    string targetFolder = @"D:\download test\";
+
+    _diskClient.DownloadFile(sourcesPathFile, targetFolder, true).RunAsyncOnMainThread((fileInfo) =>
+    {
+        if (fileInfo.Status == ResponseStatus.Success)
+        {
+            Debug.Log("File has been download success");
+            Debug.Log($"File downloaded from {fileInfo.SourcePath} to {fileInfo.TargetPath}");
+        }
+    });
+
+```
+
+<img src="Screenshots~/explorer_zwuBVm09EG.gif" width=70% height=70%>
+
+Also you may use ` YandexDiskClient.DownloadFiles(string[] source, string target, overwrite = true) ` to download some files.
