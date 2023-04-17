@@ -25,9 +25,9 @@ As of Unity3D 2021.3 LTS, here is a chart of platform support
 
 | Platform                            | Is `YandexDiskSDK` supported?          |
 |-------------------------------------|----------------------------------------|
-| Android (IL2CPP)                    | Maybe                                  |
-| Android (Mono)                      | Maybe                                  |
-| iOS (IL2CPP)                        | Not tested                             |
+| Android (IL2CPP)                    | No (it will be later)                  |
+| Android (Mono)                      | No (it will be later)                  |
+| iOS (IL2CPP)                        | No                                     |
 | PlayStation 4 (IL2CPP)              | No                                     |
 | PlayStation Vita (IL2CPP)           | No                                     |
 | Standalone (IL2CPP)                 | Yes (tested only Windows)              |
