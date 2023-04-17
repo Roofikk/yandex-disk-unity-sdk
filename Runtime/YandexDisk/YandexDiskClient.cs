@@ -216,37 +216,37 @@ namespace YandexDiskSDK
             return ResponseStatus.Success;
         }
 
-        public async Task<LoadFileInfo> UploadFile(string sourcePath, string targetPath, bool overwrite = false)
+        public async Task<LoadFileInfo> UploadFile(string sourcePath, string targetFolderPath, bool overwrite = false)
         {
             if (!File.Exists(sourcePath))
             {
                 Debug.LogError($"File {sourcePath} not found");
-                return new LoadFileInfo(sourcePath, targetPath, ResponseStatus.FileNotExists);
+                return new LoadFileInfo(sourcePath, targetFolderPath, ResponseStatus.FileNotExists);
             }
 
             string[] strSplit = sourcePath.Split(new char[] { '\\', '/' });
             string fileName = strSplit[strSplit.Length - 1];
 
-            UrlResponse urlResponse = await GetUrlToUploadFile(targetPath + "/" + fileName, overwrite);
+            UrlResponse urlResponse = await GetUrlToUploadFile(targetFolderPath + "/" + fileName, overwrite);
 
             if (urlResponse.Status != ResponseStatus.Success)
             {
                 if (urlResponse.Status == ResponseStatus.FileExists)
                 {
-                    Debug.LogError($"File {targetPath + "/" + fileName} already exists");
-                    return new LoadFileInfo(sourcePath, targetPath, urlResponse.Status);
+                    Debug.LogError($"File {targetFolderPath + "/" + fileName} already exists");
+                    return new LoadFileInfo(sourcePath, targetFolderPath, urlResponse.Status);
                 }
 
                 if (urlResponse.Status == ResponseStatus.Unauthorized)
                 {
                     Debug.LogError("Authorization failed");
-                    return new LoadFileInfo(sourcePath, targetPath, ResponseStatus.Unauthorized);
+                    return new LoadFileInfo(sourcePath, targetFolderPath, ResponseStatus.Unauthorized);
                 }
 
                 if (urlResponse.Status == ResponseStatus.Failed)
                 {
                     Debug.LogError("Failed to get file upload link");
-                    return new LoadFileInfo(sourcePath, targetPath, urlResponse.Status);
+                    return new LoadFileInfo(sourcePath, targetFolderPath, urlResponse.Status);
                 }
             }
 
@@ -256,7 +256,7 @@ namespace YandexDiskSDK
                 client.UploadFileAsync(uri, sourcePath);
             }
 
-            return new LoadFileInfo(sourcePath, targetPath, ResponseStatus.Success);
+            return new LoadFileInfo(sourcePath, targetFolderPath, ResponseStatus.Success);
         }
 
         private async Task<UrlResponse> GetUrlToUploadFile(string targetPath, bool overwrite)
@@ -287,24 +287,24 @@ namespace YandexDiskSDK
             return new UrlResponse(ResponseStatus.Success, url); ;
         }
 
-        public async Task<LoadFileInfo> DownloadFile(FileInfo fileInfo, string targetPath, bool overwrite = false)
+        public async Task<LoadFileInfo> DownloadFile(FileInfo fileInfo, string targetFolderPath, bool overwrite = false)
         {
             if (!overwrite)
-                if (File.Exists(targetPath + "/" + fileInfo.Name))
+                if (File.Exists(targetFolderPath + "/" + fileInfo.Name))
                 {
-                    Debug.LogError($"The file is already in the given path: {targetPath}/{fileInfo.Name}");
-                    return new LoadFileInfo(fileInfo.Path, targetPath + "/" + fileInfo.Name, ResponseStatus.FileExists);
+                    Debug.LogError($"The file is already in the given path: {targetFolderPath}/{fileInfo.Name}");
+                    return new LoadFileInfo(fileInfo.Path, targetFolderPath + "/" + fileInfo.Name, ResponseStatus.FileExists);
                 }
 
             using WebClient client = new();
             Uri uri = new(fileInfo.UrlToDownloadFile);
 
-            await client.DownloadFileTaskAsync(uri, targetPath + "/" + fileInfo.Name);
+            await client.DownloadFileTaskAsync(uri, targetFolderPath + "/" + fileInfo.Name);
 
-            return new LoadFileInfo(fileInfo.Path, targetPath, ResponseStatus.Success);
+            return new LoadFileInfo(fileInfo.Path, targetFolderPath, ResponseStatus.Success);
         }
 
-        public async Task<LoadFileInfo> DownloadFile(string sourcePath, string targetPath, bool overwrite = false)
+        public async Task<LoadFileInfo> DownloadFile(string sourcePath, string targetFolderPath, bool overwrite = false)
         {
             UrlResponse urlResponse = await GetUrlToDownloadFile(sourcePath);
 
@@ -313,19 +313,19 @@ namespace YandexDiskSDK
                 if (urlResponse.Status == ResponseStatus.FileNotExists)
                 {
                     Debug.LogError($"File not found: {sourcePath}");
-                    return new LoadFileInfo(sourcePath, targetPath, urlResponse.Status);
+                    return new LoadFileInfo(sourcePath, targetFolderPath, urlResponse.Status);
                 }
 
                 if (urlResponse.Status == ResponseStatus.Unauthorized)
                 {
                     Debug.Log("Authorization failed");
-                    return new LoadFileInfo(sourcePath, targetPath, urlResponse.Status);
+                    return new LoadFileInfo(sourcePath, targetFolderPath, urlResponse.Status);
                 }
 
                 if (urlResponse.Status == ResponseStatus.Failed)
                 {
                     Debug.LogError($"Failed to get download link {sourcePath}");
-                    return new LoadFileInfo(sourcePath, targetPath, urlResponse.Status);
+                    return new LoadFileInfo(sourcePath, targetFolderPath, urlResponse.Status);
                 }
             }
 
@@ -333,21 +333,21 @@ namespace YandexDiskSDK
             string fileName = strSplit[strSplit.Length - 1];
 
             if (!overwrite)
-                if (File.Exists(targetPath + "/" + fileName))
+                if (File.Exists(targetFolderPath + "/" + fileName))
                 {
-                    Debug.LogError($"The file at the given path already exists: {targetPath}/{fileName}");
-                    return new LoadFileInfo(sourcePath, targetPath, ResponseStatus.FileExists);
+                    Debug.LogError($"The file at the given path already exists: {targetFolderPath}/{fileName}");
+                    return new LoadFileInfo(sourcePath, targetFolderPath, ResponseStatus.FileExists);
                 }
 
             using WebClient client = new();
             Uri uri = new(urlResponse.Url);
 
-            client.DownloadFileAsync(uri, targetPath + "/" + fileName);
+            client.DownloadFileAsync(uri, targetFolderPath + "/" + fileName);
 
-            return new LoadFileInfo(sourcePath, targetPath, ResponseStatus.Success);
+            return new LoadFileInfo(sourcePath, targetFolderPath, ResponseStatus.Success);
         }
 
-        public async Task<UrlResponse> GetUrlToDownloadFile(string path)
+        private async Task<UrlResponse> GetUrlToDownloadFile(string path)
         {
             string urlEncoding = HttpUtility.UrlEncode(path);
 
