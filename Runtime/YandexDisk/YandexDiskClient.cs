@@ -71,6 +71,12 @@ namespace YandexDiskSDK
                     return null;
                 }
 
+                if (response.StatusCode == HttpStatusCode.BadRequest)
+                {
+                    Debug.LogError("Bad request");
+                    return null;
+                }
+
                 Debug.LogError("Failed to get person info.");
                 return null;
             }
@@ -124,6 +130,12 @@ namespace YandexDiskSDK
                     return null;
                 }
 
+                if (response.StatusCode == HttpStatusCode.BadRequest)
+                {
+                    Debug.Log("Bad request");
+                    return null;
+                }
+
                 Debug.LogError("Failed to retrieve information from the folder. Check Authorization");
                 return null;
             }
@@ -132,14 +144,24 @@ namespace YandexDiskSDK
             string responseBody = await response.Content.ReadAsStringAsync();
             FolderInfo folderInfo = JsonConvert.DeserializeObject<FolderInfo>(responseBody);
 
+            List<Task<FolderInfo>> tasks = new List<Task<FolderInfo>>();
+
             if (recursive)
             {
                 foreach (var folder in folderInfo.Folders)
                 {
-                    FolderInfo newFolder = await GetContentOfFolder(folder.Path, true);
-                    folder.Folders.Add(newFolder);
+                    Task<FolderInfo> task = GetContentOfFolder(folder.Path, true);
+                    tasks.Add(task);
+                    task.RunAsyncOnMainThread((newFolder) =>
+                    {
+                        folder.Folders.AddRange(newFolder.Folders);
+                        folder.Files.AddRange(newFolder.Files);
+                    });
                 }
             }
+
+            if (recursive && tasks.Count != 0)
+                await Task.WhenAll(tasks);
 
             return folderInfo;
         }
@@ -395,7 +417,8 @@ namespace YandexDiskSDK
         Success,
         Failed,
         FileExists,
-        FileNotExists
+        FileNotExists,
+        BadRequest
     }
 
     public class UrlResponse
