@@ -1,5 +1,4 @@
 using TMPro;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using YandexDiskSDK;
@@ -164,7 +163,8 @@ public class MainSample : MonoBehaviour
 
     private void UploadFile()
     {
-        string path = EditorUtility.OpenFilePanel("Select file for upload", "", "");
+#if UNITY_EDITOR
+        string path = UnityEditor.EditorUtility.OpenFilePanel("Select file for upload", "", "");
 
         if (string.IsNullOrEmpty(path))
         {
@@ -182,11 +182,15 @@ public class MainSample : MonoBehaviour
                 _resultText.text += $"File uploaded from {fileInfo.SourcePath} to {fileInfo.TargetPath}\n";
             }
         });
+#else
+        Debug.LogError("It work only in editor mode");
+#endif
     }
 
     private void DownloadFile()
     {
-        string path = EditorUtility.OpenFolderPanel("Select folder to download", "", "");
+#if UNITY_EDITOR
+        string path = UnityEditor.EditorUtility.OpenFolderPanel("Select folder to download", "", "");
 
         if (string.IsNullOrEmpty(path))
         {
@@ -204,5 +208,8 @@ public class MainSample : MonoBehaviour
                 _resultText.text += $"File downloaded from {fileInfo.SourcePath} to {fileInfo.TargetPath}\n";
             }
         });
+#else
+        Debug.LogError("It work only in editor mode");
+#endif
     }
 }
