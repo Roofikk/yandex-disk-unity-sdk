@@ -5,25 +5,44 @@ Yandex Disk plugin is an open source plugin whose goal is to provide the develop
 
 ## Overview
 
-The plugin provides support for the following features of the Yandex Disk API:
+The plugin provides support for the features of the Yandex Disk API such as:
 
 - authorization
-- get disk and person information
-- get files of folder
-- get information about folder
-- download/upload files to folder
+- creating folder
+- getting disk and person information
+- getting files of folder
+- getting information about folder
+- downloading/uploading files to folder
 
-Requirements:
-- Unity 2021.3 (maybe the plugin works in earlier versions like 2019 or 2020, but I haven't checked)
+##Requirements:
+
+To install `YandexDiskSDK`, you need: 
+
+- Unity 2021.3 LTS (maybe the plugin works in earlier versions like 2019 or 2020, but I haven't checked)
 - Newtonsoft.Json
 
-**WARNING!!**
+As of Unity3D 2021.3 LTS, here is a chart of platform support
 
-This plugin has been tested only on Windows build. I can't be sure that it will work on Android, MAC, iOS, etc. It definitely won't work on WebGL. In the future, all this will be corrected and supplemented. I will add it to WebGL soon.
+| Platform                            | Is `YandexDiskSDK` supported?          |
+|-------------------------------------|----------------------------------------|
+| Android (IL2CPP)                    | Yes                                    |
+| Android (Mono)                      | Yes                                    |
+| iOS (IL2CPP)                        | Not tested                             |
+| PlayStation 4 (IL2CPP)              | No                                     |
+| PlayStation Vita (IL2CPP)           | No                                     |
+| Standalone (IL2CPP)                 | Yes (tested only Windows)              |
+| Standalone (Mono)                   | Yes (tested only Windows)              |
+| Universal Windows Platform (IL2CPP) | Not tested                             |
+| Universal Windows Platform (.NET)   | Not tested                             |
+| WebGL (IL2CPP)                      | No (it will be later)                  |
+| WiiU (Mono)                         | No                                     |
+| XBox One (IL2CPP)                   | No                                     |
 
 ## Install Yandex Disk Plugin
 
-Open **Package Manager** (Window --> Package Manager) and choose **Add package from git URL...** Paste this git repository and this is the finish.
+Open `Package Manager` (Window --> Package Manager) and choose `Add package from git URL...` Paste this git repository and this is the finish. 
+
+**WARNING!!** If you decide to export `Main Sample`, please note that the correct operation of the functions will be carried out only in editor mode.
 
 ## Configure Your Application
 
