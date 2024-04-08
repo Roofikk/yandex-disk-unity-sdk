@@ -14,7 +14,7 @@ The plugin provides support for the features of the Yandex Disk API such as:
 - getting information about folder
 - downloading/uploading files to folder
 
-##Requirements:
+## Requirements:
 
 To install `YandexDiskSDK`, you need: 
 
